@@ -8,16 +8,23 @@ spec:
   goTemplate: true
   goTemplateOptions: ["missingkey=error"]
   generators:
-    - clusters: {}
+    - matrix:
+        generators:
+          - clusters: {}
+          - git:
+              repoURL: https://github.com/komailo/argocd-example-manifests
+              revision: main
+              directories:
+                - path: "applicationset/all-clusters/*"
   template:
     metadata:
-      name: "cluster-commons-{{.name}}"
+      name: "app-{{.path.basename}}"
     spec:
       project: default
       source:
         repoURL: https://github.com/komailo/argocd-example-manifests
         targetRevision: main
-        path: "applicationset/cluster-commons"
+        path: "{{.path.path}}"
       destination:
         server: "{{.server}}"
         namespace: "argocd"
