@@ -24,7 +24,6 @@ spec:
       syncPolicy:
         automated:
           prune: true
-          selfHeal: false
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
@@ -58,4 +57,3 @@ spec:
       syncPolicy:
         automated:
           prune: true
-          selfHeal: false

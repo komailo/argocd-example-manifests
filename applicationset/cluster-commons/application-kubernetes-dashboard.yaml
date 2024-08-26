@@ -25,4 +25,3 @@ spec:
   syncPolicy:
     automated:
       prune: true # Automatically prune resources when they are no longer defined
-      selfHeal: false
