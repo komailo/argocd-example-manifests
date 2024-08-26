@@ -1,0 +1,61 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: git-common-cluster
+  namespace: argocd
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+    - clusters: {}
+  template:
+    metadata:
+      name: "cluster-commons-{{.name}}"
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/komailo/argocd-example-manifests
+        targetRevision: main
+        path: "applicationset/cluster-commons"
+      destination:
+        server: "{{.server}}"
+        namespace: "argocd"
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: false
+---
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: cluster-git
+  namespace: argocd
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+    - matrix:
+        generators:
+          - clusters: {}
+          - git:
+              repoURL: https://github.com/komailo/argocd-example-manifests
+              revision: main
+              directories:
+                - path: "applicationset/{{.name}}/*"
+  template:
+    metadata:
+      name: "app-{{.path.basename}}"
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/komailo/argocd-example-manifests
+        targetRevision: main
+        path: "{{.path.path}}"
+      destination:
+        server: "{{.server}}"
+        namespace: argocd
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: false

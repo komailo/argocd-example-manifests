@@ -1,0 +1,28 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kubernetes-dashboard
+  namespace: argocd
+spec:
+  project: default
+  source:
+    chart: kubernetes-dashboard
+    repoURL: https://kubernetes.github.io/dashboard
+    targetRevision: 7.5.0
+    helm:
+      releaseName: kubernetes-dashboard
+      values: |
+        kong:
+          enabled: true
+          proxy:
+            type: LoadBalancer
+            http:
+              enabled: false
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: kubernetes-dashboard
+  syncPolicy:
+    automated:
+      prune: true # Automatically prune resources when they are no longer defined
+      selfHeal: false
