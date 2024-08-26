@@ -18,7 +18,7 @@ spec:
                 - path: "applicationset/all-clusters/*"
   template:
     metadata:
-      name: "app-{{.path.basename}}"
+      name: "{{.path.basename}}"
     spec:
       project: default
       source:
@@ -51,7 +51,7 @@ spec:
                 - path: "applicationset/{{.name}}/*"
   template:
     metadata:
-      name: "app-{{.path.basename}}"
+      name: "{{.path.basename}}"
     spec:
       project: default
       source:
